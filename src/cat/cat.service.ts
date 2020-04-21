@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cat } from 'src/entities/cat.entity';
 import { Repository } from 'typeorm';
-import { Update } from 'src/photo/dto/update';
-
+import { UpdateCat } from './dto/updateCat';
+ 
 @Injectable()
 export class CatService {
     
@@ -14,19 +14,17 @@ export class CatService {
 
     async getCat(idCat: number){
         const cat = await this.catRepeository.findOne({
-            where:`cat.id = ${idCat}`, relations: ["photo"]
+            where:`cat.id = ${idCat}`
         })
         return cat;
     }
 
-    async getCatAll(idCat: number){
-        const cats = await this.catRepeository.find({
-            relations: ["photo"]
-        })
+    async getCatAll(){
+        const cats = await this.catRepeository.find();
         return cats;
     }
     
-    async createPhoto(cat: Update){
+    async createCat(cat: UpdateCat){
         const result = await this.catRepeository
         .createQueryBuilder()
         .insert()
