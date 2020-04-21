@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Photo } from 'src/entities/photo.entity';
 import { Repository } from 'typeorm';
-import { Update } from './dto/update';
+import { Update } from './dto/updatePhoto';
 
 @Injectable()
 export class PhotoService {
@@ -12,22 +12,21 @@ export class PhotoService {
         private readonly photoRepository: Repository<Photo>
     ){}
 
-    async getPhoto(photoId: number){
+    async getPhoto(id: number){
         const photo = this.photoRepository.findOne({
-            where:`phto.id = ${photoId}`, relations:["cat"] 
+            where:`photo.id = ${id}`, relations:["catId"] 
         });
-        
         return photo;
     }
 
     async getPhotoAll(){
         const photos = await this.photoRepository.find({
-            relations:["cat"] 
+            relations:["catId"] 
         });
         return photos;
     }
 
-    async createPhoto(photo: Update){
+    async createPhoto(photo: Update[]){
         const result = await this.photoRepository
         .createQueryBuilder()
         .insert()
@@ -36,5 +35,4 @@ export class PhotoService {
         .execute();
         return result;
     }
-
 }
